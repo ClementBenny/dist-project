@@ -23,6 +23,7 @@ require __DIR__.'/auth.php';
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', fn() => view('admin.dashboard'))->name('dashboard');
     Route::resource('products', \App\Http\Controllers\Admin\ProductController::class);
+    Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
 });
 
 // Customer routes — only customer role can access
