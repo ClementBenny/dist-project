@@ -29,4 +29,5 @@ class User extends Authenticatable
     public function isCustomer(): bool { return $this->role === 'customer'; }
     public function isShop(): bool     { return $this->role === 'shop'; }
     public function isStaff(): bool    { return $this->role === 'staff'; }
+    public function orders() { return $this->hasMany(Order::class); }
 }

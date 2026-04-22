@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\OrderController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -21,9 +22,11 @@ require __DIR__.'/auth.php';
 
 // Admin routes — only admin role can access
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', fn() => view('admin.dashboard'))->name('dashboard');
+    //Route::get('/dashboard', fn() => view('admin.dashboard'))->name('dashboard');
+    Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
     Route::resource('products', \App\Http\Controllers\Admin\ProductController::class);
     Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
+    Route::resource('orders', OrderController::class)->only(['index', 'show', 'update']);
 });
 
 // Customer routes — only customer role can access
