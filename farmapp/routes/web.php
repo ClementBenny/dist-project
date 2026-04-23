@@ -3,6 +3,9 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Customer\ShopController;
+use App\Http\Controllers\Customer\CartController;
+use App\Http\Controllers\Customer\OrderController as CustomerOrderController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -30,8 +33,17 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 });
 
 // Customer routes — only customer role can access
-Route::middleware(['auth', 'role:customer'])->prefix('shop')->name('shop.')->group(function () {
-    Route::get('/', fn() => view('shop.index'))->name('index');
+    Route::middleware(['auth', 'role:customer'])->prefix('shop')->name('shop.')->group(function () {
+    Route::get('/', [ShopController::class, 'index'])->name('index');
+    Route::get('/orders', [CustomerOrderController::class, 'index'])->name('orders');
+    Route::get('/orders/{order}', [CustomerOrderController::class, 'show'])->name('orders.show');
+    Route::patch('/orders/{order}/cancel', [CustomerOrderController::class, 'cancel'])->name('orders.cancel');
+    Route::get('/cart', [CartController::class, 'index'])->name('cart');
+    Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+    Route::post('/cart/update', [CartController::class, 'update'])->name('cart.update');
+    Route::post('/cart/remove', [CartController::class, 'remove'])->name('cart.remove');
+    Route::get('/checkout', [CartController::class, 'checkout'])->name('checkout');
+    Route::post('/checkout', [CartController::class, 'placeOrder'])->name('checkout.store');
 });
 
 // Shop/bulk buyer routes — only shop role can access
