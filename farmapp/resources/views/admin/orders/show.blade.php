@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('page-title', 'Order #{{ str_pad($order->id, 4, "0", STR_PAD_LEFT) }}')
+@section('page-title')Order #{{ str_pad($order->id, 4, '0', STR_PAD_LEFT) }}@endsection
 
 @section('content')
 
@@ -18,9 +18,9 @@
 <div class="mb-6">
     <a href="{{ route('admin.orders.index') }}" class="text-green-600 hover:text-green-800 text-sm">← Back to Orders</a>
     <div class="flex items-center gap-3 mt-1">
-        <h1 class="text-2xl font-bold text-gray-800">
-            Order #{{ str_pad($order->id, 4, '0', STR_PAD_LEFT) }}
-        </h1>
+    <h1 class="text-2xl font-bold text-gray-800">
+        Order #{{ str_pad($order->id, 4, '0', STR_PAD_LEFT) }}
+    </h1>
         <span class="px-2.5 py-1 rounded-full text-xs font-semibold {{ $statusColours[$order->status] }}">
             {{ ucfirst($order->status) }}
         </span>

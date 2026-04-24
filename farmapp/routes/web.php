@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Customer\ShopController;
 use App\Http\Controllers\Customer\CartController;
 use App\Http\Controllers\Customer\OrderController as CustomerOrderController;
@@ -27,6 +28,7 @@ require __DIR__.'/auth.php';
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     //Route::get('/dashboard', fn() => view('admin.dashboard'))->name('dashboard');
     Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+    Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
     Route::resource('products', \App\Http\Controllers\Admin\ProductController::class);
     Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
     Route::resource('orders', OrderController::class)->only(['index', 'show', 'update']);
@@ -34,6 +36,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
 // Customer routes — only customer role can access
     Route::middleware(['auth', 'role:customer'])->prefix('shop')->name('shop.')->group(function () {
+    Route::get('/category/{category}', [ShopController::class, 'category'])->name('category');
     Route::get('/', [ShopController::class, 'index'])->name('index');
     Route::get('/orders', [CustomerOrderController::class, 'index'])->name('orders');
     Route::get('/orders/{order}', [CustomerOrderController::class, 'show'])->name('orders.show');

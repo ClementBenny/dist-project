@@ -1,13 +1,20 @@
 @extends('layouts.shop')
 
-@section('page-title', 'Order Detail')
+@section('page-title', 'My Orders')
 
 @section('content')
 
+<h1 class="text-2xl font-bold text-gray-800 mb-6">My Orders</h1>
+
 @php
-    $steps = ['pending', 'confirmed', 'picking', 'packed', 'delivered'];
-    $currentIndex = array_search($order->status, $steps);
-    $cancelled = $order->status === 'cancelled';
+    $statusColours = [
+        'pending'   => 'bg-yellow-100 text-yellow-700',
+        'confirmed' => 'bg-blue-100 text-blue-700',
+        'picking'   => 'bg-purple-100 text-purple-700',
+        'packed'    => 'bg-indigo-100 text-indigo-700',
+        'delivered' => 'bg-green-100 text-green-700',
+        'cancelled' => 'bg-red-100 text-red-700',
+    ];
 
     $stepLabels = [
         'pending'   => 'Order Placed',
@@ -15,146 +22,89 @@
         'picking'   => 'Being Picked',
         'packed'    => 'Packed',
         'delivered' => 'Delivered',
-    ];
-
-    $stepIcons = [
-        'pending'   => '🧾',
-        'confirmed' => '✅',
-        'picking'   => '🧺',
-        'packed'    => '📦',
-        'delivered' => '🚚',
+        'cancelled' => 'Cancelled',
     ];
 @endphp
 
-@if(session('success'))
-    <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg mb-6">
-        {{ session('success') }}
-    </div>
-@endif
-@if(session('error'))
-    <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg mb-6">
-        {{ session('error') }}
-    </div>
-@endif
+@forelse($orders as $order)
+<div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5 mb-4">
 
-<div class="mb-6">
-    <a href="{{ route('shop.orders') }}" class="text-green-600 hover:text-green-800 text-sm">← My Orders</a>
-    <div class="flex items-center justify-between mt-1">
-        <h1 class="text-2xl font-bold text-gray-800">
-            Order #{{ str_pad($order->id, 4, '0', STR_PAD_LEFT) }}
-        </h1>
-        {{-- Cancel button — only show if not yet packed and not already cancelled --}}
-        @if(!$cancelled && $currentIndex !== false && $currentIndex < 3)
-            <form action="{{ route('shop.orders.cancel', $order) }}" method="POST"
-                  onsubmit="return confirm('Cancel this order?')">
-                @csrf
-                @method('PATCH')
-                <button type="submit"
-                        class="text-sm text-red-500 hover:text-red-700 border border-red-300 hover:border-red-500 px-3 py-1.5 rounded-lg transition-colors">
-                    Cancel Order
-                </button>
-            </form>
-        @endif
-    </div>
-    <p class="text-sm text-gray-400 mt-0.5">Placed {{ $order->created_at->diffForHumans() }}</p>
-</div>
-
-{{-- Status Progress Bar --}}
-<div class="bg-white rounded-xl border border-gray-200 shadow-sm p-6 mb-6">
-    @if($cancelled)
-        <div class="flex items-center gap-3 text-red-600">
-            <span class="text-2xl">❌</span>
-            <div>
-                <p class="font-semibold">Order Cancelled</p>
-                <p class="text-sm text-red-400">This order was cancelled and will not be processed.</p>
-            </div>
+    {{-- Top row: order number + status badge + view link --}}
+    <div class="flex items-start justify-between mb-4">
+        <div>
+            <p class="font-semibold text-gray-800">Order #{{ str_pad($order->id, 4, '0', STR_PAD_LEFT) }}</p>
+            <p class="text-sm text-gray-500 mt-0.5">
+                {{ $order->created_at->format('d M Y') }} · ₹{{ number_format($order->total, 2) }}
+            </p>
         </div>
-    @else
-        {{-- Step dots + connecting bar --}}
-        <div class="relative flex items-start justify-between">
+        <div class="flex items-center gap-3">
+            <span class="px-2.5 py-1 rounded-full text-xs font-semibold {{ $statusColours[$order->status] }}">
+                {{ ucfirst($order->status) }}
+            </span>
+            <a href="{{ route('shop.orders.show', $order) }}"
+               class="text-green-600 hover:text-green-800 text-sm font-medium">
+                View →
+            </a>
+        </div>
+    </div>
 
-            {{-- Background bar --}}
-            <div class="absolute top-5 left-0 right-0 h-1 bg-gray-200 z-0"></div>
+    {{-- Progress bar (only for non-cancelled orders) --}}
+    @if($order->status !== 'cancelled')
+        @php
+            $steps = ['pending', 'confirmed', 'picking', 'packed', 'delivered'];
+            $currentIndex = array_search($order->status, $steps);
+            $progressPercent = $currentIndex !== false && count($steps) > 1
+                ? ($currentIndex / (count($steps) - 1)) * 100
+                : 0;
+        @endphp
 
-            {{-- Filled progress bar --}}
-            @php
-                $progressPercent = $currentIndex !== false && count($steps) > 1
-                    ? ($currentIndex / (count($steps) - 1)) * 100
-                    : 0;
-            @endphp
-            <div class="absolute top-5 left-0 h-1 bg-green-500 z-0 transition-all duration-500"
+        <div class="relative flex items-start justify-between mt-2">
+
+            {{-- Grey track --}}
+            <div class="absolute top-4 left-0 right-0 h-0.5 bg-gray-200 z-0"></div>
+
+            {{-- Green filled track --}}
+            <div class="absolute top-4 left-0 h-0.5 bg-green-500 z-0 transition-all duration-500"
                  style="width: {{ $progressPercent }}%"></div>
 
-            {{-- Steps --}}
+            {{-- Step dots --}}
             @foreach($steps as $i => $step)
-            @php
-                $isDone    = $currentIndex !== false && $i < $currentIndex;
-                $isCurrent = $currentIndex !== false && $i === $currentIndex;
-            @endphp
-            <div class="relative z-10 flex flex-col items-center text-center"
-                 style="width: {{ 100 / count($steps) }}%">
+                @php
+                    $isDone    = $currentIndex !== false && $i < $currentIndex;
+                    $isCurrent = $currentIndex !== false && $i === $currentIndex;
+                @endphp
+                <div class="relative z-10 flex flex-col items-center text-center"
+                     style="width: {{ 100 / count($steps) }}%">
 
-                {{-- Circle --}}
-                <div class="w-10 h-10 rounded-full flex items-center justify-center text-lg mb-2
-                    {{ $isDone    ? 'bg-green-500 text-white' : '' }}
-                    {{ $isCurrent ? 'bg-green-600 text-white ring-4 ring-green-100' : '' }}
-                    {{ !$isDone && !$isCurrent ? 'bg-gray-100 text-gray-400' : '' }}">
-                    @if($isDone)
-                        ✓
-                    @else
-                        {{ $stepIcons[$step] }}
-                    @endif
+                    <div class="w-8 h-8 rounded-full flex items-center justify-center text-sm mb-1
+                        {{ $isDone    ? 'bg-green-500 text-white' : '' }}
+                        {{ $isCurrent ? 'bg-green-600 text-white ring-4 ring-green-100' : '' }}
+                        {{ !$isDone && !$isCurrent ? 'bg-gray-100 text-gray-400' : '' }}">
+                        @if($isDone) ✓ @else {{ ['🧾','✅','🧺','📦','🚚'][$i] }} @endif
+                    </div>
+
+                    <p class="text-xs leading-tight
+                        {{ $isCurrent ? 'text-green-700 font-semibold' : ($isDone ? 'text-green-600' : 'text-gray-400') }}">
+                        {{ $stepLabels[$step] }}
+                    </p>
                 </div>
-
-                {{-- Label --}}
-                <p class="text-xs font-medium leading-tight
-                    {{ $isCurrent ? 'text-green-700' : ($isDone ? 'text-green-600' : 'text-gray-400') }}">
-                    {{ $stepLabels[$step] }}
-                </p>
-            </div>
             @endforeach
-
+        </div>
+    @else
+        <div class="flex items-center gap-2 text-red-500 text-sm mt-1">
+            <span>❌</span>
+            <span>This order was cancelled.</span>
         </div>
     @endif
-</div>
 
-{{-- Items table --}}
-<div class="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden mb-4">
-    <table class="w-full text-sm">
-        <thead class="bg-gray-50 border-b border-gray-100">
-            <tr>
-                <th class="text-left px-6 py-3 font-medium text-gray-500">Product</th>
-                <th class="text-right px-6 py-3 font-medium text-gray-500">Unit Price</th>
-                <th class="text-right px-6 py-3 font-medium text-gray-500">Qty</th>
-                <th class="text-right px-6 py-3 font-medium text-gray-500">Subtotal</th>
-            </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-100">
-            @foreach($order->items as $item)
-            <tr>
-                <td class="px-6 py-3 font-medium text-gray-800">{{ $item->product->name }}</td>
-                <td class="px-6 py-3 text-right text-gray-600">₹{{ number_format($item->unit_price, 2) }}</td>
-                <td class="px-6 py-3 text-right text-gray-600">{{ $item->quantity }}</td>
-                <td class="px-6 py-3 text-right font-medium">₹{{ number_format($item->unit_price * $item->quantity, 2) }}</td>
-            </tr>
-            @endforeach
-        </tbody>
-        <tfoot class="border-t-2 border-gray-200">
-            <tr>
-                <td colspan="3" class="px-6 py-4 text-right font-semibold text-gray-700">Total</td>
-                <td class="px-6 py-4 text-right font-bold text-gray-900">₹{{ number_format($order->total, 2) }}</td>
-            </tr>
-        </tfoot>
-    </table>
 </div>
-
-<div class="bg-white rounded-xl border border-gray-200 shadow-sm p-5 text-sm">
-    <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Delivery Address</p>
-    <p class="text-gray-700">{{ $order->delivery_address }}</p>
-    @if($order->notes)
-        <p class="text-xs text-gray-400 uppercase tracking-wide mt-3 mb-1">Notes</p>
-        <p class="text-gray-700">{{ $order->notes }}</p>
-    @endif
+@empty
+<div class="text-center py-16">
+    <p class="text-gray-400 mb-4">You haven't placed any orders yet.</p>
+    <a href="{{ route('shop.index') }}" class="text-green-600 hover:text-green-800 font-medium">
+        Start shopping →
+    </a>
 </div>
+@endforelse
 
 @endsection

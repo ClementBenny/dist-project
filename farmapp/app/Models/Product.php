@@ -17,7 +17,19 @@ class Product extends Model
         'unit',
         'stock',
         'is_active',
+        'image',
+        'category_id',
     ];
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function orderItems()
+    {
+        return $this->hasMany(\App\Models\OrderItem::class);
+    }
 
     protected function casts(): array
     {
