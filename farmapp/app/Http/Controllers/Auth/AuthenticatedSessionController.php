@@ -31,7 +31,7 @@ class AuthenticatedSessionController extends Controller
         $destination = match(auth()->user()->role) {
             'admin'  => route('admin.dashboard'),
             'shop'   => route('bulk.index'),
-            'staff'  => route('staff.index'),
+            'staff'  => route('staff.dashboard'),
             default  => route('shop.index'),
         };
 

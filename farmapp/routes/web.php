@@ -4,6 +4,8 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Staff\StaffController;
+use App\Http\Controllers\Staff\StockController;
 use App\Http\Controllers\Customer\ShopController;
 use App\Http\Controllers\Customer\CartController;
 use App\Http\Controllers\Customer\OrderController as CustomerOrderController;
@@ -56,5 +58,10 @@ Route::middleware(['auth', 'role:shop'])->prefix('bulk')->name('bulk.')->group(f
 
 // Staff routes — only staff role can access
 Route::middleware(['auth', 'role:staff'])->prefix('staff')->name('staff.')->group(function () {
-    Route::get('/', fn() => view('staff.index'))->name('index');
+    Route::get('/', [StaffController::class, 'dashboard'])->name('dashboard');
+    Route::get('/orders', [StaffController::class, 'orders'])->name('orders');
+    Route::get('/orders/{order}', [StaffController::class, 'show'])->name('orders.show');
+    Route::patch('/orders/{order}/status', [StaffController::class, 'updateStatus'])->name('orders.status');
+    Route::get('/stock', [StockController::class, 'index'])->name('stock');
+    Route::patch('/stock/{product}', [StockController::class, 'update'])->name('stock.update');
 });
