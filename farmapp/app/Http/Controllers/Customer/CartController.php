@@ -31,13 +31,11 @@ class CartController extends Controller
         $cart = session('cart', []);
         $id   = $request->product_id;
 
-        // Add to existing quantity or set fresh
         $cart[$id] = ($cart[$id] ?? 0) + $request->quantity;
 
         session(['cart' => $cart]);
 
-        return redirect()->route('shop.cart')
-            ->with('success', 'Item added to cart.');
+        return back()->with('success', 'Item added to cart.');
     }
 
     public function update(Request $request)
