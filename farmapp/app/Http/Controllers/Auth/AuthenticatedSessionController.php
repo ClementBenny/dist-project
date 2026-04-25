@@ -29,10 +29,11 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerate();
 
         $destination = match(auth()->user()->role) {
-            'admin'  => route('admin.dashboard'),
-            'shop'   => route('bulk.index'),
-            'staff'  => route('staff.dashboard'),
-            default  => route('shop.index'),
+            'admin'    => route('admin.dashboard'),
+            'shop'     => route('wholesale.index'),
+            'staff'    => route('staff.dashboard'),
+            'customer' => route('shop.index'),
+            default    => route('shop.index'),
         };
 
         return redirect()->intended($destination);

@@ -39,13 +39,12 @@
             <div class="flex-1 flex items-center justify-end gap-6 text-sm">
                 <a href="{{ route('shop.cart') }}" class="relative group p-1 {{ request()->routeIs('shop.cart') ? 'text-green-700' : 'text-gray-600 hover:text-green-700' }}">
                     <span class="transition-transform inline-block group-hover:scale-110">🛒 Cart</span>
-                    
-                    @php $cartCount = count(session('cart', [])); @endphp
-                    @if($cartCount > 0)
-                        <span id="cart-count-badge" class="absolute -top-1 -right-2 bg-green-600 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center ring-2 ring-white">
-                            {{ $cartCount }}
-                        </span>
-                    @endif
+
+                    @php $cartCount = array_sum(session('cart', [])); @endphp
+                    <span id="cart-count-badge"
+                        class="absolute -top-1 -right-2 bg-green-600 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center ring-2 ring-white {{ $cartCount === 0 ? 'hidden' : '' }}">
+                        {{ $cartCount ?: '' }}
+                    </span>
                 </a>
 
                 <form method="POST" action="{{ route('logout') }}" class="inline">

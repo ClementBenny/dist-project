@@ -125,17 +125,15 @@
                         </div>
 
                         {{-- ADD TO CART --}}
-                        <form method="POST" action="{{ route('shop.cart.add') }}" class="mt-4 flex gap-2">
-                            @csrf
-                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                        <div class="mt-4 flex gap-2">
+                            <input type="number" id="qty-{{ $product->id }}" value="1" min="1"
+                                class="w-16 text-center border rounded-xl">
 
-                            <input type="number" name="quantity" value="1" min="1"
-                                   class="w-16 text-center border rounded-xl">
-
-                            <button class="flex-1 bg-green-600 text-white rounded-xl hover:bg-green-700">
+                            <button onclick="addToCart({{ $product->id }})"
+                                    class="flex-1 bg-green-600 text-white rounded-xl hover:bg-green-700">
                                 Add
                             </button>
-                        </form>
+                        </div>
 
                     </div>
 
@@ -151,3 +149,39 @@
 </div>
 
 @endsection
+
+@push('scripts')
+<script>
+function addToCart(productId) {
+    const quantity = document.getElementById('qty-' + productId).value;
+
+    fetch('{{ route('shop.cart.add') }}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            'Accept': 'application/json',
+        },
+        body: JSON.stringify({ product_id: productId, quantity: parseInt(quantity) }),
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            const badge = document.getElementById('cart-count-badge');
+            badge.textContent = data.cart_count;
+            badge.classList.remove('hidden');
+            showToast('Added to cart!');
+        }
+    });
+}
+
+function showToast(message) {
+    const toast = document.createElement('div');
+    toast.textContent = message;
+    toast.className = 'fixed bottom-5 right-5 bg-green-600 text-white text-sm px-4 py-2 rounded-lg shadow-lg z-50';
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+}
+</script>
+
+@endpush

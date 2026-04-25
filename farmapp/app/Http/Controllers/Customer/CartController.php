@@ -35,6 +35,13 @@ class CartController extends Controller
 
         session(['cart' => $cart]);
 
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success'    => true,
+                'cart_count' => array_sum($cart),
+            ]);
+        }
+
         return back()->with('success', 'Item added to cart.');
     }
 

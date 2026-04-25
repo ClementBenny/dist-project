@@ -8,6 +8,7 @@ use App\Http\Controllers\Staff\StaffController;
 use App\Http\Controllers\Staff\StockController;
 use App\Http\Controllers\Customer\ShopController;
 use App\Http\Controllers\Customer\CartController;
+use App\Http\Controllers\Wholesale;
 use App\Http\Controllers\Customer\OrderController as CustomerOrderController;
 
 Route::get('/', function () {
@@ -51,9 +52,23 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/checkout', [CartController::class, 'placeOrder'])->name('checkout.store');
 });
 
-// Shop/bulk buyer routes — only shop role can access
-Route::middleware(['auth', 'role:shop'])->prefix('bulk')->name('bulk.')->group(function () {
-    Route::get('/', fn() => view('bulk.index'))->name('index');
+// Wholesale (Shop role)
+Route::middleware(['auth', 'role:shop'])->prefix('wholesale')->name('wholesale.')->group(function () {
+    // Browse
+    Route::get('/', [Wholesale\ShopController::class, 'index'])->name('index');
+    Route::get('/category/{category}', [Wholesale\ShopController::class, 'category'])->name('category');
+    // Cart
+    Route::get('/cart', [Wholesale\CartController::class, 'index'])->name('cart');
+    Route::post('/cart/add', [Wholesale\CartController::class, 'add'])->name('cart.add');
+    Route::post('/cart/update', [Wholesale\CartController::class, 'update'])->name('cart.update');
+    Route::post('/cart/remove', [Wholesale\CartController::class, 'remove'])->name('cart.remove');
+    // Checkout
+    Route::get('/checkout', [Wholesale\CartController::class, 'checkout'])->name('checkout');
+    Route::post('/checkout', [Wholesale\CartController::class, 'placeOrder'])->name('checkout.store');
+    // Orders
+    Route::get('/orders', [Wholesale\OrderController::class, 'index'])->name('orders');
+    Route::get('/orders/{order}', [Wholesale\OrderController::class, 'show'])->name('orders.show');
+    Route::patch('/orders/{order}/cancel', [Wholesale\OrderController::class, 'cancel'])->name('orders.cancel');
 });
 
 // Staff routes — only staff role can access
