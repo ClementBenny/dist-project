@@ -65,10 +65,10 @@
             @if(isset($product) && $product->image)
                 <img src="{{ Storage::url($product->image) }}"
                      alt="{{ $product->name }}"
-                     class="w-full h-36 object-cover rounded-lg mb-3 border border-gray-200">
+                     class="w-full h-40 object-contain rounded-lg mb-3 border border-gray-200">
                 <p class="text-xs text-gray-400 mb-2">Upload a new image to replace this one.</p>
             @else
-                <div class="w-full h-36 bg-green-50 rounded-lg flex items-center justify-center text-4xl mb-3 border border-dashed border-gray-300">
+                <div class="w-full h-40 bg-green-50 rounded-lg flex items-center justify-center text-4xl mb-3 border border-dashed border-gray-300">
                     🥬
                 </div>
             @endif
