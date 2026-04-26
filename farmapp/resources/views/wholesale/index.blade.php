@@ -1,89 +1,143 @@
 @extends('layouts.wholesale')
 
-@section('title', isset($category) ? $category->name : 'All Products')
+@section('title', isset($category) ? $category->name : 'Wholesale')
 
 @section('content')
-    @include('partials.flash')
 
-    <div class="flex gap-8">
+<div class="flex gap-6 lg:gap-8 items-start">
 
-        {{-- Category Sidebar --}}
-        <aside class="w-48 shrink-0">
-            <h2 class="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3">Categories</h2>
-            <ul class="space-y-1">
-                <li>
-                    <a href="{{ route('wholesale.index') }}"
-                       class="block text-sm px-3 py-1.5 rounded-md {{ !isset($category) ? 'bg-green-100 text-green-800 font-medium' : 'text-gray-600 hover:bg-gray-100' }}">
-                        All Products
-                    </a>
-                </li>
-                @foreach ($categories as $cat)
-                    <li>
+    {{-- Sidebar --}}
+    <aside class="w-56 lg:w-64 flex-shrink-0 sticky top-6">
+        <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-5">
+            <h2 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-4 px-1">Categories</h2>
+
+            <nav class="space-y-1.5">
+                <a href="{{ route('wholesale.index') }}"
+                   class="group flex items-center justify-between px-3 py-2.5 rounded-full text-sm font-medium
+                   {{ !isset($category) ? 'bg-green-50 text-green-800 font-bold' : 'text-gray-600 hover:bg-gray-50' }}">
+                    <span>All Products</span>
+                    <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-gray-100">
+                        {{ $categories->sum('products_count') }}
+                    </span>
+                </a>
+
+                @foreach($categories as $cat)
+                    @if($cat->products_count > 0)
                         <a href="{{ route('wholesale.category', $cat) }}"
-                           class="block text-sm px-3 py-1.5 rounded-md {{ isset($category) && $category->id === $cat->id ? 'bg-green-100 text-green-800 font-medium' : 'text-gray-600 hover:bg-gray-100' }}">
-                            {{ $cat->name }}
-                            <span class="text-xs text-gray-400">({{ $cat->products_count }})</span>
+                           class="group flex items-center justify-between px-3 py-2.5 rounded-full text-sm font-medium
+                           {{ isset($category) && $category->id === $cat->id ? 'bg-green-50 text-green-800 font-bold' : 'text-gray-600 hover:bg-gray-50' }}">
+                            <span>{{ $cat->name }}</span>
+                            <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-gray-100">
+                                {{ $cat->products_count }}
+                            </span>
                         </a>
-                    </li>
+                    @endif
                 @endforeach
-            </ul>
-        </aside>
+            </nav>
+        </div>
+    </aside>
 
-        {{-- Product Grid --}}
-        <div class="flex-1">
-            @forelse ($products as $product)
-                @if ($loop->first)
-                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                @endif
+    {{-- Main --}}
+    <div class="flex-1">
 
-                <div class="bg-white rounded-xl border border-gray-200 overflow-hidden flex flex-col">
-                    <div class="aspect-[4/3] bg-gray-100 flex items-center justify-center overflow-hidden">
-                        @if ($product->image)
-                            <img src="{{ Storage::url($product->image) }}"
-                                 alt="{{ $product->name }}"
-                                 class="w-full h-full object-cover object-center">
+        {{-- Header --}}
+        <div class="mb-6 bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+            <h1 class="text-3xl font-extrabold text-gray-900">
+                {{ isset($category) ? $category->name : 'Wholesale Products' }}
+            </h1>
+
+            <p class="text-sm text-gray-500 mt-2">
+                Showing {{ $products->count() }} {{ Str::plural('product', $products->count()) }}
+            </p>
+        </div>
+
+        {{-- Products --}}
+        @if($products->isEmpty())
+
+            <div class="text-center py-20 bg-white rounded-3xl border border-gray-100">
+                <div class="text-5xl mb-4">🌱</div>
+                <h3 class="text-xl font-bold mb-2">No products found</h3>
+                <a href="{{ route('wholesale.index') }}" class="px-6 py-3 bg-gray-900 text-white rounded-full">
+                    Browse All
+                </a>
+            </div>
+
+        @else
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                @foreach($products as $product)
+
+                <div class="group bg-white rounded-3xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden">
+
+                    {{-- IMAGE --}}
+                    <div class="relative h-76 w-full overflow-hidden rounded-t-3xl bg-white">
+
+                        @if($product->image)
+                           <img src="{{ Storage::url($product->image) }}"
+                                class="block w-full h-full object-contain object-center transition-transform duration-500 group-hover:scale-110">
                         @else
-                            <span class="text-5xl">🥬</span>
+                            <div class="text-6xl">🥬</div>
                         @endif
                     </div>
-                    <div class="p-3 flex flex-col flex-1">
-                        <p class="text-xs text-gray-400 mb-0.5">{{ $product->category?->name }}</p>
-                        <h3 class="text-sm font-semibold text-gray-800">{{ $product->name }}</h3>
-                        <p class="text-xs text-gray-500 mt-1 flex-1">{{ $product->description }}</p>
-                        <div class="mt-3 flex items-center justify-between">
-                            <div>
-                                <span class="text-base font-bold text-green-700">
+
+                    {{-- CONTENT --}}
+                    <div class="p-5 flex flex-col flex-1">
+                        <h2 class="font-bold text-gray-900 group-hover:text-green-600 transition-colors duration-200">
+                            {{ $product->name }}
+                        </h2>
+
+                        <p class="text-sm text-gray-500 mt-1 flex-1">
+                            {{ $product->description }}
+                        </p>
+
+                        <div class="mt-4 flex items-center justify-between gap-2">
+                            {{-- Bulk Price --}}
+                            <div class="flex items-baseline gap-1">
+                                <span class="text-lg font-bold text-gray-900">
                                     ₹{{ number_format($product->bulk_price, 2) }}
                                 </span>
-                                <span class="text-xs text-gray-400">/ {{ $product->unit }}</span>
+                                <span class="text-xs text-gray-400">
+                                    / {{ $product->unit }}
+                                </span>
                             </div>
-                            @if ($product->stock > 0)
-                                <button
-                                    onclick="addToCart({{ $product->id }})"
-                                    class="text-xs bg-green-600 hover:bg-green-700 text-white px-3 py-1.5 rounded-lg">
-                                    Add
-                                </button>
-                            @else
-                                <span class="text-xs text-red-500 font-medium">Out of stock</span>
+
+                            {{-- Category --}}
+                            @if($product->category)
+                            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-white/60 backdrop-blur-sm text-gray-800 border border-white/40 shadow-sm whitespace-nowrap">
+                                {{ $product->category->name }}
+                            </span>
                             @endif
+                        </div>
+
+                        {{-- ADD TO CART --}}
+                        <div class="mt-4 flex gap-2">
+                            <input type="number" id="qty-{{ $product->id }}" value="1" min="1"
+                                class="w-16 text-center border border-gray-200 rounded-full px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-green-500">
+
+                            <button onclick="addToCart({{ $product->id }})"
+                                    class="flex-1 bg-green-600 text-white rounded-full py-1.5 font-medium hover:bg-green-700 transition-colors duration-200">
+                                Add
+                            </button>
                         </div>
                     </div>
                 </div>
 
-                @if ($loop->last)
-                    </div>
-                @endif
-            @empty
-                <p class="text-gray-500 text-sm">No products available.</p>
-            @endforelse
-        </div>
+                @endforeach
+            </div>
+
+        @endif
 
     </div>
+</div>
+
 @endsection
 
 @push('scripts')
 <script>
 function addToCart(productId) {
+    const quantity = document.getElementById('qty-' + productId).value;
+
     fetch('{{ route('wholesale.cart.add') }}', {
         method: 'POST',
         headers: {
@@ -91,15 +145,15 @@ function addToCart(productId) {
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
             'Accept': 'application/json',
         },
-        body: JSON.stringify({ product_id: productId, quantity: 1 }),
+        body: JSON.stringify({ product_id: productId, quantity: parseInt(quantity) }),
     })
     .then(r => r.json())
     .then(data => {
         if (data.success) {
-            const badge = document.getElementById('cart-badge');
+            const badge = document.getElementById('cart-count-badge');
             badge.textContent = data.cart_count;
             badge.classList.remove('hidden');
-            showToast('Item added to cart!');
+            showToast('Added to cart!');
         }
     });
 }
@@ -107,7 +161,7 @@ function addToCart(productId) {
 function showToast(message) {
     const toast = document.createElement('div');
     toast.textContent = message;
-    toast.className = 'fixed bottom-5 right-5 bg-green-600 text-white text-sm px-4 py-2 rounded-lg shadow-lg z-50';
+    toast.className = 'fixed bottom-5 right-5 bg-green-600 text-white text-sm px-4 py-2 rounded-full shadow-lg z-50';
     document.body.appendChild(toast);
     setTimeout(() => toast.remove(), 3000);
 }
