@@ -112,6 +112,7 @@ class CartController extends Controller
             'notes'            => $validated['notes'] ?? null,
         ]);
 
+        
         // Create each line item and accumulate total
         $total = 0;
         foreach ($products as $product) {
@@ -122,6 +123,7 @@ class CartController extends Controller
                 'unit_price' => $product->price,
             ]);
             $total += $qty * $product->price;
+            $product->decrement('stock', $qty);
         }
 
         $order->update(['total' => $total]);

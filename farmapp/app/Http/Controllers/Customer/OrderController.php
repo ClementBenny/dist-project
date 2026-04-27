@@ -45,6 +45,10 @@ class OrderController extends Controller
 
     $order->update(['status' => 'cancelled']);
 
+    foreach ($order->items as $item) {
+        $item->product->increment('stock', $item->quantity);
+    }
+
     return redirect()->route('shop.orders.show', $order)
         ->with('success', 'Your order has been cancelled.');
 }
