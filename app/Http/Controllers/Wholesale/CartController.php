@@ -137,6 +137,7 @@ class CartController extends Controller
                     'quantity'   => $quantity,
                     'unit_price' => $products[$productId]->bulk_price,
                 ]);
+                $products[$productId]->decrement('stock', $quantity);
             }
         }
 
