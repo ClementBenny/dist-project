@@ -49,6 +49,13 @@
                            value="{{ old('stock', $product->stock ?? 0) }}"
                            class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
                 </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Minimum Order Quantity</label>
+                    <input type="number" name="min_order_qty" min="1"
+                        value="{{ old('min_order_qty', $product->min_order_qty ?? 1) }}"
+                        class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 @error('min_order_qty') border-red-400 @enderror">
+                    @error('min_order_qty') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                </div>
             </div>
 
         </div>

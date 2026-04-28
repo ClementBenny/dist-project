@@ -16,6 +16,7 @@ class Product extends Model
         'bulk_price',
         'unit',
         'stock',
+        'min_order_qty', // Added here
         'is_active',
         'image',
         'category_id',
@@ -34,10 +35,11 @@ class Product extends Model
     protected function casts(): array
     {
         return [
-            'price'      => 'decimal:2',
-            'bulk_price' => 'decimal:2',
-            'is_active'  => 'boolean',
-            'stock'      => 'integer',
+            'price'         => 'decimal:2',
+            'bulk_price'    => 'decimal:2',
+            'is_active'     => 'boolean',
+            'stock'         => 'integer',
+            'min_order_qty' => 'integer', // Added here
         ];
     }
 }

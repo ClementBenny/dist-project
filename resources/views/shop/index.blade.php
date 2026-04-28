@@ -120,16 +120,31 @@
                         </div>
 
                         {{-- ADD TO CART --}}
-                        <div class="mt-4 flex gap-2">
-                            <input type="number" id="qty-{{ $product->id }}" value="1" min="1"
-                                class="w-16 text-center border border-gray-200 rounded-full px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-green-500">
+                        @if($product->stock <= 0)
+                            <div class="mt-4">
+                                <span class="w-full block text-center bg-gray-100 text-gray-400 rounded-full py-1.5 text-sm font-medium">
+                                    Out of Stock
+                                </span>
+                            </div>
+                        @else
+                            <div class="mt-4 flex gap-2">
+                                <input type="number" 
+                                    id="qty-{{ $product->id }}" 
+                                    value="1" 
+                                    min="1" 
+                                    max="{{ $product->stock }}"
+                                    class="w-16 text-center border border-gray-200 rounded-full px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-green-500">
 
-                            <button onclick="addToCart({{ $product->id }})"
-                                    class="flex-1 bg-green-600 text-white rounded-full py-1.5 font-medium hover:bg-green-700 transition-colors duration-200">
-                                Add
-                            </button>
-                        </div>
+                                <button onclick="addToCart({{ $product->id }})"
+                                        class="flex-1 bg-green-600 text-white rounded-full py-1.5 font-medium hover:bg-green-700 transition-colors duration-200">
+                                    Add
+                                </button>
+                            </div>
 
+                            @if($product->stock <= 5)
+                                <p class="text-xs text-amber-500 mt-1.5">Only {{ $product->stock }} left</p>
+                            @endif
+                        @endif
                     </div>
 
                 </div>

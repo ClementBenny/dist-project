@@ -3,7 +3,6 @@
 @section('title', 'Cart')
 
 @section('content')
-    @include('partials.flash')
 
     <h1 class="text-xl font-bold text-gray-800 mb-6">Your Cart</h1>
 

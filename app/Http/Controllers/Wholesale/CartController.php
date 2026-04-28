@@ -37,9 +37,22 @@ class CartController extends Controller
             'quantity'   => 'required|integer|min:1',
         ]);
 
+        $product = \App\Models\Product::findOrFail($request->product_id);
         $cart = session($this->cartKey, []);
         $productId = $request->product_id;
-        $cart[$productId] = ($cart[$productId] ?? 0) + $request->quantity;
+        $cartQty = $cart[$productId] ?? 0;
+
+        if (($cartQty + $request->quantity) > $product->stock) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Not enough stock available.',
+                ]);
+            }
+            return back()->with('error', 'Not enough stock available.');
+        }
+
+        $cart[$productId] = $cartQty + $request->quantity;
         session([$this->cartKey => $cart]);
 
         if ($request->expectsJson()) {

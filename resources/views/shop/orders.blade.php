@@ -32,7 +32,7 @@
     {{-- Top row: order number + status badge + view link --}}
     <div class="flex items-start justify-between mb-4">
         <div>
-            <p class="font-semibold text-gray-800">Order #{{ str_pad($order->id, 4, '0', STR_PAD_LEFT) }}</p>
+            <p class="font-semibold text-gray-800">Order #{{ strtoupper(substr(md5($order->id . $order->created_at), 0, 8)) }}</p>
             <p class="text-sm text-gray-500 mt-0.5">
                 {{ $order->created_at->format('d M Y') }} · ₹{{ number_format($order->total, 2) }}
             </p>

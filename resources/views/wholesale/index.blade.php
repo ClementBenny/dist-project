@@ -109,17 +109,55 @@
                             </span>
                             @endif
                         </div>
+                    
+                        
 
-                        {{-- ADD TO CART --}}
-                        <div class="mt-4 flex gap-2">
-                            <input type="number" id="qty-{{ $product->id }}" value="1" min="1"
-                                class="w-16 text-center border border-gray-200 rounded-full px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-green-500">
-
-                            <button onclick="addToCart({{ $product->id }})"
-                                    class="flex-1 bg-green-600 text-white rounded-full py-1.5 font-medium hover:bg-green-700 transition-colors duration-200">
-                                Add
-                            </button>
+                    {{-- ADD TO CART SECTION --}}
+                    <div class="mt-4">
+                        
+                        {{-- Stock indicator: Removed mt-4 here to stop the extra gap --}}
+                        <div class="flex items-center justify-between text-xs mb-2">
+                            <span class="text-gray-400">
+                                {{ $product->stock <= 0 ? 'Out of Stock' : 'Available' }}
+                            </span>
+                            
+                            <span class="font-semibold {{ $product->stock <= 0 ? 'text-red-500' : ($product->stock <= 10 ? 'text-amber-500' : 'text-green-600') }}">
+                                {{ $product->stock }} {{ $product->unit }}(s) left
+                            </span>
                         </div>
+
+                        {{-- Min order badge --}}
+                        <div class="flex items-center gap-1.5 bg-green-50 border border-green-100 rounded-xl px-3 py-2 mb-3">
+                            <svg class="w-3.5 h-3.5 text-green-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20A10 10 0 0012 2z"/>
+                            </svg>
+                            <span class="text-xs text-green-700">
+                                Minimum order: <span class="font-bold">{{ $product->min_order_qty }} {{ $product->unit }}(s)</span>
+                            </span>
+                        </div>
+
+                        {{-- Interaction row --}}
+                        @if($product->stock <= 0)
+                            <span class="w-full block text-center bg-gray-100 text-gray-400 rounded-full py-1.5 text-sm font-medium">
+                                Out of Stock
+                            </span>
+                        @else
+                            <div class="flex gap-2">
+                                <input type="number"
+                                    id="qty-{{ $product->id }}"
+                                    value="{{ $product->min_order_qty }}"
+                                    min="{{ $product->min_order_qty }}"
+                                    max="{{ $product->stock }}"
+                                    class="w-20 text-center border border-gray-200 rounded-full px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-green-500 text-sm">
+
+                                <button onclick="addToCart({{ $product->id }})"
+                                        class="flex-1 bg-green-600 text-white rounded-full py-1.5 font-medium hover:bg-green-700 transition-colors duration-200 text-sm">
+                                    Add to Cart
+                                </button>
+                            </div>
+                        @endif
+                    </div>
+
                     </div>
                 </div>
 
@@ -153,15 +191,17 @@ function addToCart(productId) {
             const badge = document.getElementById('cart-count-badge');
             badge.textContent = data.cart_count;
             badge.classList.remove('hidden');
-            showToast('Added to cart!');
+            showToast('Added to cart!', 'green');
+        } else {
+            showToast(data.message ?? 'Could not add to cart.', 'red');
         }
     });
 }
 
-function showToast(message) {
+function showToast(message, color = 'green') {
     const toast = document.createElement('div');
     toast.textContent = message;
-    toast.className = 'fixed bottom-5 right-5 bg-green-600 text-white text-sm px-4 py-2 rounded-full shadow-lg z-50';
+    toast.className = `fixed bottom-5 right-5 bg-${color}-600 text-white text-sm px-4 py-2 rounded-full shadow-lg z-50`;
     document.body.appendChild(toast);
     setTimeout(() => toast.remove(), 3000);
 }

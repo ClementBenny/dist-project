@@ -33,7 +33,7 @@
     <a href="{{ route('shop.orders') }}" class="text-green-600 hover:text-green-800 text-sm">← My Orders</a>
     <div class="flex items-center justify-between mt-1">
         <h1 class="text-2xl font-bold text-gray-800">
-            Order #{{ str_pad($order->id, 4, '0', STR_PAD_LEFT) }}
+            Order #{{ strtoupper(substr(md5($order->id . $order->created_at), 0, 8)) }}
         </h1>
         @if(!$cancelled && $currentIndex !== false && $currentIndex < 3)
             <form action="{{ route('shop.orders.cancel', $order) }}" method="POST"

@@ -3,7 +3,6 @@
 @section('title', 'My Orders')
 
 @section('content')
-    @include('partials.flash')
 
     <h1 class="text-xl font-bold text-gray-800 mb-6">My Orders</h1>
 
@@ -12,7 +11,7 @@
             <div class="flex items-center justify-between mb-3">
                 <div>
                     <span class="text-sm font-semibold text-gray-800">
-                        Order #{{ str_pad($order->id, 4, '0', STR_PAD_LEFT) }}
+                        Order #{{ strtoupper(substr(md5($order->id . $order->created_at), 0, 8)) }}
                     </span>
                     <span class="text-xs text-gray-400 ml-2">{{ $order->created_at->format('d M Y') }}</span>
                 </div>

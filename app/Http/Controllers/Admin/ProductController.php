@@ -23,28 +23,29 @@ class ProductController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'name'        => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
-            'price'       => ['required', 'numeric', 'min:0'],
-            'bulk_price'  => ['nullable', 'numeric', 'min:0'],
-            'unit'        => ['required', 'string', 'max:50'],
-            'stock'       => ['required', 'integer', 'min:0'],
-            'category_id' => ['nullable', 'exists:categories,id'],
-            'is_active'   => ['boolean'],
-            'image'       => ['nullable', 'image', 'max:2048'],
-        ]);
+            $validated = $request->validate([
+                'name'        => ['required', 'string', 'max:255'],
+                'description' => ['nullable', 'string'],
+                'price'       => ['required', 'numeric', 'min:0'],
+                'bulk_price'  => ['nullable', 'numeric', 'min:0'],
+                'unit'        => ['required', 'string', 'max:50'],
+                'stock'       => ['required', 'integer', 'min:0'],
+                'min_order_qty' => ['required', 'integer', 'min:1'], // Added validation
+                'category_id' => ['nullable', 'exists:categories,id'],
+                'is_active'   => ['boolean'],
+                'image'       => ['nullable', 'image', 'max:2048'],
+            ]);
 
-        if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('products', 'public');
-        }
+            if ($request->hasFile('image')) {
+                $validated['image'] = $request->file('image')->store('products', 'public');
+            }
 
-        $validated['is_active'] = $request->boolean('is_active');
+            $validated['is_active'] = $request->boolean('is_active');
 
-        Product::create($validated);
+            Product::create($validated);
 
-        return redirect()->route('admin.products.index')
-            ->with('success', 'Product created.');
+            return redirect()->route('admin.products.index')
+                ->with('success', 'Product created.');
     }
 
     public function edit(Product $product)
@@ -62,6 +63,7 @@ class ProductController extends Controller
             'bulk_price'  => ['nullable', 'numeric', 'min:0'],
             'unit'        => ['required', 'string', 'max:50'],
             'stock'       => ['required', 'integer', 'min:0'],
+            'min_order_qty' => ['required', 'integer', 'min:1'], // Added validation
             'category_id' => ['nullable', 'exists:categories,id'],
             'is_active'   => ['boolean'],
             'image'       => ['nullable', 'image', 'max:2048'],

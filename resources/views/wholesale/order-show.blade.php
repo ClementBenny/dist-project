@@ -3,7 +3,6 @@
 @section('title')Order #{{ str_pad($order->id, 4, '0', STR_PAD_LEFT) }}@endsection
 
 @section('content')
-    @include('partials.flash')
 
     <div class="mb-4">
         <a href="{{ route('wholesale.orders') }}" class="text-sm text-gray-500 hover:text-gray-700">← Back to Orders</a>
@@ -13,7 +12,7 @@
         <div class="flex items-start justify-between mb-4">
             <div>
                 <h1 class="text-lg font-bold text-gray-800">
-                    Order #{{ str_pad($order->id, 4, '0', STR_PAD_LEFT) }}
+                    Order #{{ strtoupper(substr(md5($order->id . $order->created_at), 0, 8)) }}
                 </h1>
                 <p class="text-xs text-gray-400 mt-0.5">Placed on {{ $order->created_at->format('d M Y, g:i A') }}</p>
             </div>
