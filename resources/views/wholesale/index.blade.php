@@ -42,7 +42,7 @@
 
         {{-- Header --}}
         <div class="mb-6 p-6 rounded-3xl border" style="background: var(--champagne); border-color: rgba(196,164,132,0.3);">
-            <h1 class="text-3xl font-extrabold" style="color: var(--umber);">
+            <h1 class="section-title" style="margin-bottom: 0;">
                 {{ isset($category) ? $category->name : 'Wholesale Products' }}
             </h1>
             <p class="text-sm mt-2" style="color: var(--mauve);">
@@ -123,7 +123,7 @@
                                 </span>
                             </div>
 
-                            {{-- Interactive Row --}}
+                            {{-- Interactive Row - Fixed alignment for Add to Cart --}}
                             <div class="h-10">
                                 @if($product->stock <= 0)
                                     <span class="w-full h-full flex items-center justify-center rounded-full text-sm font-medium" 
@@ -138,10 +138,10 @@
                                             min="{{ $product->min_order_qty }}"
                                             max="{{ $product->stock }}"
                                             style="border: 1px solid var(--champagne); color: var(--umber); background: white;"
-                                            class="w-20 text-center rounded-full px-2 focus:outline-none focus:ring-1 focus:ring-olive-500 text-sm">
+                                            class="w-16 text-center rounded-full px-2 focus:outline-none focus:ring-1 focus:ring-olive-500 text-sm">
 
                                         <button onclick="addToCart({{ $product->id }})"
-                                                class="btn-primary flex-1 text-sm h-full">
+                                                class="btn-primary flex-1 text-sm h-full flex items-center justify-center px-0">
                                             Add to Cart
                                         </button>
                                     </div>
