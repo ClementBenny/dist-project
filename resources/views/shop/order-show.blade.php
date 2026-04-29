@@ -4,7 +4,6 @@
 
 @section('content')
 
-@include('partials.flash')
 
 @php
     $steps = ['pending', 'confirmed', 'picking', 'packed', 'delivered'];
