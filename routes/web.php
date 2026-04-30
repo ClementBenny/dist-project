@@ -13,6 +13,7 @@ use App\Http\Controllers\Wholesale;
 use App\Http\Controllers\Customer\OrderController as CustomerOrderController;
 
 Route::get('/', [LandingController::class, 'index'])->name('landing');
+Route::get('/produce', [App\Http\Controllers\LandingController::class, 'produce'])->name('produce');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

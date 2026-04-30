@@ -352,7 +352,7 @@
     </a>
     <div class="nav-right">
         <a href="#about" class="nav-link">About</a>
-        <a href="#produce" class="nav-link">Produce</a>
+        <a href="{{ route('produce') }}" class="nav-link">Produce</a>
         <a href="{{ route('login') }}" class="nav-login">Login</a>
         <form method="POST" action="{{ route('logout') }}" class="inline">
             @csrf
