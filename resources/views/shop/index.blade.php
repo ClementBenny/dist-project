@@ -4,6 +4,13 @@
 
 @section('content')
 
+<style>
+  .hover-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  }
+</style>
+
 <div class="flex gap-6 lg:gap-8 items-start max-w-7xl mx-auto px-6" style="padding-top: 120px; padding-bottom: 80px;">
 
     {{-- Sidebar --}}
@@ -60,8 +67,8 @@
         @else
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 @foreach($products as $product)
-                <div class="group rounded-3xl border shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden" 
-                     style="background: var(--ivory); border-color: rgba(196,164,132,0.2);">
+                <div class="rounded-3xl border transition-all duration-300 hover-card" 
+                                    style="background: var(--ivory); border-color: rgba(196,164,132,0.2); cursor: pointer;">
 
                     {{-- Image --}}
                     <div class="relative h-76 w-full overflow-hidden rounded-t-3xl" style="background: var(--champagne);">

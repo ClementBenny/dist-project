@@ -6,6 +6,7 @@
     <title>@yield('title', 'Farm Direct')</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         :root {
@@ -52,68 +53,38 @@
             opacity: 0.85;
         }
         .nav-right { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
-
         .nav-link {
             font-size: 13px; letter-spacing: 0.05em;
             color: var(--mauve); text-decoration: none;
-            transition: color 0.2s;
-            white-space: nowrap;
+            transition: color 0.2s; white-space: nowrap;
         }
         .nav-link:hover { color: var(--umber); }
-
-        /* cart badge */
         .nav-link-cart { position: relative; display: flex; align-items: center; gap: 5px; }
         .nav-cart-badge {
-            background: var(--umber);
-            color: var(--ivory);
+            background: var(--umber); color: var(--ivory);
             font-size: 10px; font-weight: 500;
-            border-radius: 999px;
-            padding: 1px 6px;
-            line-height: 1.5;
+            border-radius: 999px; padding: 1px 6px; line-height: 1.5;
         }
-
-        /* role pill */
         .nav-role-pill {
             font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
             padding: 3px 10px; border-radius: 999px;
             font-weight: 500; white-space: nowrap;
         }
-        .nav-role-pill--admin    { background: rgba(128,128,0,0.15); color: var(--olive); border: 1px solid rgba(128,128,0,0.3); }
-        .nav-role-pill--wholesale{ background: rgba(75,54,33,0.1);   color: var(--umber); border: 1px solid rgba(75,54,33,0.2); }
-        .nav-role-pill--customer { background: rgba(196,164,132,0.2); color: var(--mauve); border: 1px solid rgba(196,164,132,0.4); }
-
-        /* divider */
+        .nav-role-pill--wholesale { background: rgba(196,164,132,0.2);    color: var(--umber); border: 1px solid rgba(75,54,33,0.2); }
+        .nav-role-pill--customer  { background: rgba(196,164,132,0.2); color: var(--umber); border: 1px solid rgba(196,164,132,0.4); }
         .nav-divider { width: 1px; height: 18px; background: rgba(196,164,132,0.35); }
-
-        /* buttons */
         .nav-btn {
             font-size: 13px; letter-spacing: 0.08em;
-            padding: 8px 20px;
-            border-radius: 999px;
-            text-decoration: none;
-            white-space: nowrap;
-            transition: background 0.2s, color 0.2s, border-color 0.2s;
-            cursor: pointer; border: none; font-family: 'Jost', sans-serif;
-            font-weight: 300;
+            padding: 8px 20px; border-radius: 999px; text-decoration: none;
+            white-space: nowrap; transition: background 0.2s, color 0.2s, border-color 0.2s;
+            cursor: pointer; font-family: 'Jost', sans-serif; font-weight: 300;
         }
-        .nav-btn--outline {
-            border: 1px solid var(--mauve);
-            color: var(--umber); background: transparent;
-        }
+        .nav-btn--outline { border: 1px solid var(--mauve); color: var(--umber); background: transparent; }
         .nav-btn--outline:hover { background: var(--umber); color: var(--ivory); border-color: var(--umber); }
-        .nav-btn--solid {
-            background: var(--umber); color: var(--ivory);
-            border: 1px solid var(--umber);
-        }
+        .nav-btn--solid { background: var(--umber); color: var(--ivory); border: 1px solid var(--umber); }
         .nav-btn--solid:hover { background: var(--olive); border-color: var(--olive); }
-
-        /* user greeting */
-        .nav-greeting {
-            font-size: 12px; color: var(--mauve); letter-spacing: 0.03em;
-        }
+        .nav-greeting { font-size: 12px; color: var(--mauve); letter-spacing: 0.03em; }
         .nav-greeting strong { color: var(--umber); font-weight: 500; }
-
-        /* mobile hamburger */
         .nav-hamburger {
             display: none; flex-direction: column; gap: 5px;
             cursor: pointer; padding: 4px; background: none; border: none;
@@ -144,10 +115,8 @@
             .nav-mobile .nav-btn { text-align: center; }
         }
 
-        /* ── rest of your original styles ── */
         .btn-primary {
-            display: inline-block;
-            background: var(--umber); color: var(--ivory);
+            display: inline-block; background: var(--umber); color: var(--ivory);
             font-family: 'Jost', sans-serif; font-size: 13px; font-weight: 400;
             letter-spacing: 0.1em; text-transform: uppercase;
             padding: 14px 32px; border-radius: 999px; text-decoration: none;
@@ -194,8 +163,7 @@
         .hero-actions { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; }
         .hero-orb { position: absolute; border-radius: 50%; pointer-events: none; }
         .hero-orb-1 {
-            width: 500px; height: 500px; right: -100px; top: 50%;
-            transform: translateY(-50%);
+            width: 500px; height: 500px; right: -100px; top: 50%; transform: translateY(-50%);
             background: radial-gradient(circle, rgba(247,231,206,0.8) 0%, rgba(255,251,240,0) 70%);
         }
         .hero-orb-2 {
@@ -305,38 +273,23 @@
 </head>
 <body>
 
-{{-- ════════════════════════════════════════════
-     NAV — role-aware, auth-aware
-     ════════════════════════════════════════════ --}}
 <nav class="nav" id="main-nav">
     <a href="{{ route('landing') }}" class="nav-logo">
         <div class="nav-logo-leaf"></div>
         Farm Direct
     </a>
 
-    {{-- ── DESKTOP NAV ── --}}
+    {{-- ── DESKTOP ── --}}
     <div class="nav-right">
-
-        {{-- Always visible --}}
         <a href="{{ route('produce') }}" class="nav-link">Produce</a>
 
         @auth
             @php $role = auth()->user()->role ?? 'customer'; @endphp
-
             <div class="nav-divider"></div>
 
-            {{-- ── ADMIN ── --}}
-            @if($role === 'admin')
-                <span class="nav-role-pill nav-role-pill--admin">Admin</span>
-                <a href="{{ route('admin.dashboard') }}"       class="nav-link">Dashboard</a>
-                <a href="{{ route('admin.products.index') }}"  class="nav-link">Products</a>
-                <a href="{{ route('admin.orders.index') }}"    class="nav-link">Orders</a>
-                <a href="{{ route('admin.users.index') }}"     class="nav-link">Users</a>
-
-            {{-- ── WHOLESALE ── --}}
-            @elseif($role === 'wholesale')
+            @if($role === 'shop')
                 <span class="nav-role-pill nav-role-pill--wholesale">Wholesale</span>
-                <a href="{{ route('wholesale.index') }}"       class="nav-link">Shop</a>
+                <a href="{{ route('wholesale.index') }}" class="nav-link">Shop</a>
                 <a href="{{ route('wholesale.cart') }}"  class="nav-link nav-link-cart">
                     Cart
                     @php $cartCount = collect(session('cart', []))->sum('quantity'); @endphp
@@ -346,40 +299,33 @@
                 </a>
                 <a href="{{ route('wholesale.orders') }}" class="nav-link">Orders</a>
 
-            {{-- ── CUSTOMER ── --}}
             @else
                 <span class="nav-role-pill nav-role-pill--customer">Customer</span>
-                <a href="{{ route('shop.index') }}"            class="nav-link">Shop</a>
-                <a href="{{ route('shop.cart') }}"            class="nav-link nav-link-cart">
+                <a href="{{ route('shop.index') }}" class="nav-link">Shop</a>
+                <a href="{{ route('shop.cart') }}"  class="nav-link nav-link-cart">
                     Cart
                     @php $cartCount = collect(session('cart', []))->sum('quantity'); @endphp
                     @if($cartCount > 0)
                         <span class="nav-cart-badge">{{ $cartCount }}</span>
                     @endif
                 </a>
-                <a href="{{ route('shop.orders') }}"          class="nav-link">Orders</a>
+                <a href="{{ route('shop.orders') }}" class="nav-link">Orders</a>
             @endif
 
             <div class="nav-divider"></div>
-
             <span class="nav-greeting">Hi, <strong>{{ auth()->user()->name }}</strong></span>
-
-            {{-- Sign Out --}}
             <form method="POST" action="{{ route('logout') }}" style="margin:0">
                 @csrf
                 <button type="submit" class="nav-btn nav-btn--outline">Sign out</button>
             </form>
 
         @else
-            {{-- ── GUEST ── --}}
             <div class="nav-divider"></div>
             <a href="{{ route('login') }}"    class="nav-btn nav-btn--outline">Login</a>
             <a href="{{ route('register') }}" class="nav-btn nav-btn--solid">Register</a>
         @endauth
+    </div>
 
-    </div>{{-- end .nav-right --}}
-
-    {{-- ── MOBILE HAMBURGER ── --}}
     <button class="nav-hamburger" id="nav-toggle" aria-label="Toggle menu">
         <span></span><span></span><span></span>
     </button>
@@ -392,19 +338,14 @@
     @auth
         @php $role = auth()->user()->role ?? 'customer'; @endphp
 
-        @if($role === 'admin')
-            <a href="{{ route('admin.dashboard') }}"       class="nav-link">Dashboard</a>
-            <a href="{{ route('admin.products.index') }}"  class="nav-link">Products</a>
-            <a href="{{ route('admin.orders') }}"    class="nav-link">Orders</a>
-            <a href="{{ route('admin.users.index') }}"     class="nav-link">Users</a>
-        @elseif($role === 'wholesale')
-            <a href="{{ route('wholesale.index') }}"       class="nav-link">Shop</a>
-            <a href="{{ route('wholesale.cart') }}"  class="nav-link">Cart</a>
+        @if($role === 'shop')
+            <a href="{{ route('wholesale.index') }}"  class="nav-link">Shop</a>
+            <a href="{{ route('wholesale.cart') }}"   class="nav-link">Cart</a>
             <a href="{{ route('wholesale.orders') }}" class="nav-link">Orders</a>
         @else
-            <a href="{{ route('shop.index') }}"            class="nav-link">Shop</a>
-            <a href="{{ route('shop.cart') }}"            class="nav-link">Cart</a>
-            <a href="{{ route('shop.orders') }}"          class="nav-link">Orders</a>
+            <a href="{{ route('shop.index') }}"  class="nav-link">Shop</a>
+            <a href="{{ route('shop.cart') }}"   class="nav-link">Cart</a>
+            <a href="{{ route('shop.orders') }}" class="nav-link">Orders</a>
         @endif
 
         <form method="POST" action="{{ route('logout') }}" style="margin:0">
@@ -418,13 +359,9 @@
 </div>
 
 <script>
-    // Mobile drawer toggle
     const toggle = document.getElementById('nav-toggle');
     const drawer = document.getElementById('nav-mobile');
-    toggle?.addEventListener('click', () => {
-        drawer.classList.toggle('is-open');
-    });
-    // Close drawer on link click
+    toggle?.addEventListener('click', () => drawer.classList.toggle('is-open'));
     drawer?.querySelectorAll('a, button').forEach(el => {
         el.addEventListener('click', () => drawer.classList.remove('is-open'));
     });
@@ -438,9 +375,7 @@
         <a href="#about">About</a>
         <a href="{{ route('produce') }}">Produce</a>
         @auth
-            @if((auth()->user()->role ?? '') === 'admin')
-                <a href="{{ route('admin.dashboard') }}">Dashboard</a>
-            @elseif((auth()->user()->role ?? '') === 'wholesale')
+            @if((auth()->user()->role ?? '') === 'shop')
                 <a href="{{ route('wholesale.index') }}">Wholesale</a>
             @else
                 <a href="{{ route('shop.index') }}">Shop</a>
