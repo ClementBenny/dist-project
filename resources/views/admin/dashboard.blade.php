@@ -65,7 +65,7 @@
         <div class="a-card-head"><span class="a-card-title">Users by Role</span></div>
         <div class="a-card-body">
             @php
-                $roles = ['customer'=>['ti-user','Customers'],'shop'=>['ti-building-store','Wholesale'],'staff'=>['ti-tools','Staff'],'admin'=>['ti-shield','Admins']];
+                $roles = ['customer'=>['ti-user','Customers'],'staff'=>['ti-tools','Staff'],'admin'=>['ti-shield','Admins']];
                 $total = max(1, array_sum($usersByRole->toArray()));
             @endphp
             <div style="display:flex; flex-direction:column; gap:0.6rem;">

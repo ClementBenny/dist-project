@@ -244,9 +244,7 @@
             </a>
 
             <span class="nav-section">Reports</span>
-            <a href="{{ route('admin.reports.categories') }}" class="{{ request()->routeIs('admin.reports.categories') ? 'active' : '' }}">
-                <i class="ti ti-tags"></i> Categories
-            </a>
+
             <a href="{{ route('admin.reports.products') }}" class="{{ request()->routeIs('admin.reports.products') ? 'active' : '' }}">
                 <i class="ti ti-plant-2"></i> Products
             </a>

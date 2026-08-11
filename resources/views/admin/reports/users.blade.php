@@ -19,7 +19,6 @@
                     <option value="">All roles</option>
                     <option value="admin"    {{ request('role') === 'admin'    ? 'selected' : '' }}>Admin</option>
                     <option value="customer" {{ request('role') === 'customer' ? 'selected' : '' }}>Customer</option>
-                    <option value="shop"     {{ request('role') === 'shop'     ? 'selected' : '' }}>Shop (Wholesale)</option>
                     <option value="staff"    {{ request('role') === 'staff'    ? 'selected' : '' }}>Staff</option>
                 </select>
             </div>

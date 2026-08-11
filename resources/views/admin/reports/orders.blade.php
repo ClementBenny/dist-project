@@ -85,7 +85,7 @@
     <table class="a-table">
         <thead>
         <tr>
-            <th>Reference</th>
+            <th>Order ID</th>
             <th>Customer</th>
             <x-a-sortable-th column="status" label="Status" :sort="$sort" :direction="$direction" />
             <x-a-sortable-th column="total" label="Total" :sort="$sort" :direction="$direction" />
@@ -95,7 +95,7 @@
         <tbody>
         @forelse($rows as $row)
             <tr>
-                <td>#{{ strtoupper(substr(md5($row->id . $row->created_at), 0, 8)) }}</td>
+                <td>#{{ $row->id }}</td>
                 <td>{{ $row->user->name ?? '—' }}</td>
                 <td><span class="a-badge a-badge-{{ $row->status }}">{{ ucfirst($row->status) }}</span></td>
                 <td>₹{{ number_format($row->total, 2) }}</td>
