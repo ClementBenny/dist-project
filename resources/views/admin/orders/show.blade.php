@@ -14,7 +14,12 @@
             <h1 class="a-page-title">Order #{{ str_pad($order->id, 4, '0', STR_PAD_LEFT) }}</h1>
             <span class="a-badge a-badge-{{ $order->status }}">{{ ucfirst($order->status) }}</span>
         </div>
-        <p class="a-page-sub">Placed {{ $order->created_at->diffForHumans() }}</p>
+        <p class="a-page-sub">
+            Placed {{ $order->created_at->diffForHumans() }}
+            @if($order->updatedByStaff)
+                &middot; Last updated by {{ $order->updatedByStaff->name }}
+            @endif
+        </p>
     </div>
 </div>
 
@@ -76,6 +81,12 @@
                     <hr class="a-divider">
                     <p class="a-label">Notes</p>
                     <p style="font-size:13px; color:var(--dark); margin:0">{{ $order->notes }}</p>
+                @endif
+
+                @if($order->updatedByStaff)
+                    <hr class="a-divider">
+                    <p class="a-label">Last Updated By Staff</p>
+                    <p style="font-size:13px; color:var(--dark); margin:0">{{ $order->updatedByStaff->name }}</p>
                 @endif
             </div>
         </div>

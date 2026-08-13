@@ -88,6 +88,10 @@ Route::middleware(['auth', 'role:customer', 'no.back'])->prefix('shop')->name('s
     Route::get('/payment/{order}',  [CartController::class, 'payment'])->name('payment');
     Route::post('/payment/{order}', [CartController::class, 'processPayment'])->name('payment.process');
 
+    Route::prefix('reports')->name('reports.')->controller(\App\Http\Controllers\Customer\ReportController::class)->group(function () {
+    Route::get('/orders', 'orders')->name('orders');
+    });
+
     // Profile
     Route::prefix('profile')->name('profile.')->controller(\App\Http\Controllers\Customer\ProfileController::class)->group(function () {
     Route::get('/',                                'index')->name('index');
@@ -126,4 +130,8 @@ Route::middleware(['auth', 'role:staff', 'no.back'])->prefix('staff')->name('sta
     Route::patch('/orders/{order}/status', [StaffController::class, 'updateStatus'])->name('orders.status');
     Route::get('/stock', [StockController::class, 'index'])->name('stock');
     Route::patch('/stock/{product}', [StockController::class, 'update'])->name('stock.update');
+    
+    Route::prefix('reports')->name('reports.')->controller(\App\Http\Controllers\Staff\ReportController::class)->group(function () {
+    Route::get('/orders', 'orders')->name('orders');
+    });
 });

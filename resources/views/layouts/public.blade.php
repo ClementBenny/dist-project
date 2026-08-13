@@ -557,6 +557,7 @@
                     @endif
                 </a>
                 <a href="{{ route('shop.orders') }}" class="nav-link">Orders</a>
+                <a href="{{ route('shop.reports.orders') }}" class="nav-link">Reports</a>
                 <a href="{{ route('shop.profile.index') }}" class="nav-link">Profile</a>
             @endif
 

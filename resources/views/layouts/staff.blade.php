@@ -106,12 +106,10 @@
         .sidebar-logout i { font-size: 17px; }
         .sidebar-logout:hover { background: rgba(180,40,40,0.15); color: #fca5a5; }
 
-        /* page head */
         .s-page-head { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1.75rem; }
         .s-page-title { font-size: 1.4rem; font-weight: 800; color: var(--dark); line-height: 1; }
         .s-page-sub { font-size: 0.78rem; color: var(--muted); margin-top: 4px; }
 
-        /* stat cards */
         .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.75rem; }
 
         .stat {
@@ -132,7 +130,6 @@
         .stat-num { font-size: 1.75rem; font-weight: 800; color: var(--dark); line-height: 1; }
         .stat-sub { font-size: 11px; color: var(--olive); font-weight: 600; margin-top: 3px; }
 
-        /* cards */
         .s-card {
             background: var(--surface); border: 1px solid var(--border);
             border-radius: 12px; overflow: hidden;
@@ -152,7 +149,6 @@
         .s-two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; align-items: start; }
         @media (max-width: 900px) { .s-two-col { grid-template-columns: 1fr; } }
 
-        /* table */
         .s-table { width: 100%; border-collapse: collapse; }
         .s-table thead tr { background: var(--bg); border-bottom: 1px solid var(--border); }
         .s-table th { padding: 10px 20px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); text-align: left; }
@@ -162,7 +158,6 @@
         .s-table tbody tr:hover { background: var(--bg); }
         .s-table td { padding: 12px 20px; font-size: 13px; color: var(--dark); }
 
-        /* row list (orders etc.) */
         .s-row { display: flex; align-items: center; gap: 12px; padding: 13px 20px; border-bottom: 1px solid var(--border); text-decoration: none; color: inherit; transition: background .12s; }
         .s-row:last-child { border-bottom: none; }
         .s-row:hover { background: var(--bg); }
@@ -170,7 +165,6 @@
         .s-row-meta { font-size: 12px; color: var(--muted); margin-top: 1px; }
         .s-row-right { margin-left: auto; text-align: right; }
 
-        /* badges — values unchanged, already matched the admin palette */
         .s-badge { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 6px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; white-space: nowrap; }
         .s-badge-pending   { background: #fef3c7; color: #92400e; }
         .s-badge-confirmed { background: #dbeafe; color: #1e40af; }
@@ -181,7 +175,6 @@
 
         .s-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--bg); color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 800; flex-shrink: 0; border: 1px solid var(--border); }
 
-        /* buttons */
         .s-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; text-decoration: none; border: none; transition: opacity .15s; }
         .s-btn:hover { opacity: 0.85; }
         .s-btn-primary { background: var(--dark);  color: var(--champagne); }
@@ -192,13 +185,11 @@
         .s-open-btn { font-size: 12px; font-weight: 700; color: var(--olive); text-decoration: none; padding: 8px 16px; border: 1px solid var(--border); border-radius: 8px; transition: all .15s; }
         .s-open-btn:hover { background: var(--olive); color: #fff; border-color: var(--olive); }
 
-        /* forms */
         .s-label { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--dark); margin-bottom: 5px; }
         .s-input { width: 100%; padding: 9px 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--dark); font-size: 13px; outline: none; transition: border-color .15s; box-sizing: border-box; }
         .s-input:focus { border-color: var(--accent); }
         .s-form-group { margin-bottom: 1rem; }
 
-        /* stock level pill */
         .s-stock-pill { display: inline-flex; align-items: center; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; padding: 3px 9px; border-radius: 6px; }
         .s-stock-pill-critical { background: #fee2e2; color: #991b1b; }
         .s-stock-pill-low      { background: #fef3c7; color: #92400e; }
@@ -221,6 +212,21 @@
         @media (max-width: 992px) {
             .staff-sidebar { width: 100%; height: auto; position: relative; }
             .staff-main { margin-left: 0; width: 100%; }
+        }
+
+        @media print {
+            .staff-sidebar, .staff-topbar, .no-print {
+                display: none !important;
+            }
+            .staff-content, .s-card {
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+                border: none !important;
+            }
+            body {
+                background: #fff !important;
+            }
         }
     </style>
     @stack('styles')
@@ -245,6 +251,11 @@
             </a>
             <a href="{{ route('staff.stock') }}" class="{{ request()->routeIs('staff.stock*') ? 'active' : '' }}">
                 <i class="ti ti-package"></i> Stock Inventory
+            </a>
+
+            <span class="nav-section">Reports</span>
+            <a href="{{ route('staff.reports.orders') }}" class="{{ request()->routeIs('staff.reports.orders') ? 'active' : '' }}">
+                <i class="ti ti-shopping-cart"></i> Orders
             </a>
         </nav>
 
@@ -287,6 +298,7 @@
     window.addEventListener('pageshow', function (e) {
         if (e.persisted) window.location.reload();
     });
+    window.addEventListener('unload', function () {});
 </script>
 
 @stack('scripts')

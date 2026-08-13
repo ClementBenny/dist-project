@@ -208,6 +208,21 @@
         .a-divider { border: none; border-top: 1px solid var(--border); margin: 1.25rem 0; }
 
         .a-toast { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 999; background: var(--dark); color: var(--champagne); padding: 12px 20px; border-radius: 10px; font-size: 13px; font-weight: 600; box-shadow: 0 4px 16px rgba(0,0,0,0.18); display: flex; align-items: center; gap: 8px; }
+
+        @media print {
+        .a-sidebar, .a-topbar, .no-print {
+            display: none !important;
+        }
+        .a-content, .a-card {
+            margin: 0 !important;
+            padding: 0 !important;
+            box-shadow: none !important;
+            border: none !important;
+        }
+        body {
+            background: #fff !important;
+        }
+    }
     </style>
     @stack('styles')
 </head>

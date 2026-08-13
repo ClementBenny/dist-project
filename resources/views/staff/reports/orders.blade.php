@@ -1,14 +1,14 @@
-@extends('layouts.admin')
+@extends('layouts.staff')
 
 @section('page-title', 'Orders Report')
 
 @section('content')
-<div class="a-page-head">
+<div class="s-page-head">
     <div>
-        <div class="a-page-title">Orders Report</div>
-        <div class="a-page-sub">{{ $rows->count() }} orders</div>
+        <div class="s-page-title">Orders Report</div>
+        <div class="s-page-sub">{{ $rows->count() }} orders</div>
     </div>
-    <button type="button" class="a-btn a-btn-primary" onclick="window.print()">
+    <button type="button" class="s-btn s-btn-primary" onclick="window.print()">
         <i class="ti ti-file-type-pdf"></i> Download PDF
     </button>
 </div>
@@ -24,23 +24,23 @@
     $activeCustomer = request()->filled('user_id') ? $customers->firstWhere('id', request('user_id')) : null;
 @endphp
 
-<div class="a-card">
-    <div class="a-card-body">
-        <form method="GET" action="{{ route('admin.reports.orders') }}" style="display:flex;gap:1rem;align-items:flex-end;flex-wrap:wrap;">
+<div class="s-card">
+    <div class="s-card-body">
+        <form method="GET" action="{{ route('staff.reports.orders') }}" style="display:flex;gap:1rem;align-items:flex-end;flex-wrap:wrap;">
 
-            <div class="a-form-group" style="margin-bottom:0;">
-                <label class="a-label">From date</label>
-                <input type="date" name="date_from" value="{{ request('date_from') }}" class="a-input">
+            <div class="s-form-group" style="margin-bottom:0;">
+                <label class="s-label">From date</label>
+                <input type="date" name="date_from" value="{{ request('date_from') }}" class="s-input">
             </div>
 
-            <div class="a-form-group" style="margin-bottom:0;">
-                <label class="a-label">To date</label>
-                <input type="date" name="date_to" value="{{ request('date_to') }}" class="a-input">
+            <div class="s-form-group" style="margin-bottom:0;">
+                <label class="s-label">To date</label>
+                <input type="date" name="date_to" value="{{ request('date_to') }}" class="s-input">
             </div>
 
-            <div class="a-form-group" style="margin-bottom:0;">
-                <label class="a-label">Month</label>
-                <select name="month" class="a-input">
+            <div class="s-form-group" style="margin-bottom:0;">
+                <label class="s-label">Month</label>
+                <select name="month" class="s-input">
                     <option value="">All months</option>
                     @foreach($months as $num => $label)
                         <option value="{{ $num }}" {{ (int) request('month') === $num ? 'selected' : '' }}>{{ $label }}</option>
@@ -48,9 +48,9 @@
                 </select>
             </div>
 
-            <div class="a-form-group" style="margin-bottom:0;">
-                <label class="a-label">Year</label>
-                <select name="year" class="a-input">
+            <div class="s-form-group" style="margin-bottom:0;">
+                <label class="s-label">Year</label>
+                <select name="year" class="s-input">
                     <option value="">All years</option>
                     @foreach($years as $y)
                         <option value="{{ $y }}" {{ (string) request('year') === (string) $y ? 'selected' : '' }}>{{ $y }}</option>
@@ -58,9 +58,9 @@
                 </select>
             </div>
 
-            <div class="a-form-group" style="margin-bottom:0;">
-                <label class="a-label">Customer</label>
-                <select name="user_id" class="a-input">
+            <div class="s-form-group" style="margin-bottom:0;">
+                <label class="s-label">Customer</label>
+                <select name="user_id" class="s-input">
                     <option value="">All customers</option>
                     @foreach($customers as $customer)
                         <option value="{{ $customer->id }}" {{ (string) request('user_id') === (string) $customer->id ? 'selected' : '' }}>{{ $customer->name }}</option>
@@ -68,9 +68,9 @@
                 </select>
             </div>
 
-            <div class="a-form-group" style="margin-bottom:0;">
-                <label class="a-label">Status</label>
-                <select name="status" class="a-input">
+            <div class="s-form-group" style="margin-bottom:0;">
+                <label class="s-label">Status</label>
+                <select name="status" class="s-input">
                     <option value="">All statuses</option>
                     @foreach($statuses as $status)
                         <option value="{{ $status }}" {{ request('status') === $status ? 'selected' : '' }}>{{ ucfirst($status) }}</option>
@@ -78,18 +78,18 @@
                 </select>
             </div>
 
-            <button type="submit" class="a-btn a-btn-primary"><i class="ti ti-filter"></i> Filter</button>
+            <button type="submit" class="s-btn s-btn-primary"><i class="ti ti-filter"></i> Filter</button>
 
             @if(request()->hasAny(['date_from', 'date_to', 'month', 'year', 'user_id', 'status']))
-                <a href="{{ route('admin.reports.orders') }}" class="a-btn a-btn-ghost">Clear</a>
+                <a href="{{ route('staff.reports.orders') }}" class="s-btn s-btn-ghost">Clear</a>
             @endif
         </form>
     </div>
 
     <div class="print-area">
-        <div class="a-print-header">
+        <div class="s-print-header">
             <h1>Farm Direct — Orders Report</h1>
-            <div class="a-print-meta">
+            <div class="s-print-meta">
                 Generated {{ now()->format('d M Y, h:i A') }}
                 @if(request()->filled('date_from')) &middot; From: {{ request('date_from') }} @endif
                 @if(request()->filled('date_to')) &middot; To: {{ request('date_to') }} @endif
@@ -102,7 +102,7 @@
         </div>
 
         <div style="overflow-x:auto;">
-        <table class="a-table">
+        <table class="s-table">
             <thead>
             <tr>
                 <th>Order ID</th>
@@ -118,13 +118,13 @@
                 <tr>
                     <td>#{{ $row->id }}</td>
                     <td>{{ $row->user->name ?? '—' }}</td>
-                    <td><span class="a-badge a-badge-{{ $row->status }}">{{ ucfirst($row->status) }}</span></td>
+                    <td><span class="s-badge s-badge-{{ $row->status }}">{{ ucfirst($row->status) }}</span></td>
                     <td>₹{{ number_format($row->total, 2) }}</td>
                     <td>{{ $row->created_at->format('d M Y') }}</td>
                     <td>{{ $row->updatedByStaff->name ?? '—' }}</td>
                 </tr>
             @empty
-                <tr><td colspan="6" class="a-empty">No orders found for this filter.</td></tr>
+                <tr><td colspan="6" class="s-empty">No orders found for this filter.</td></tr>
             @endforelse
             </tbody>
         </table>
@@ -133,7 +133,7 @@
 </div>
 
 <style>
-    .a-print-header {
+    .s-print-header {
         display: none;
     }
 
@@ -159,33 +159,33 @@
             overflow: visible !important;
         }
 
-        .a-print-header {
+        .s-print-header {
             display: block;
             margin-bottom: 16px;
             border-bottom: 2px solid #4a4a3a;
             padding-bottom: 10px;
         }
 
-        .a-print-header h1 {
+        .s-print-header h1 {
             font-size: 18px;
             margin: 0 0 4px;
         }
 
-        .a-print-meta {
+        .s-print-meta {
             font-size: 11px;
             color: #666;
         }
 
-        .a-table {
+        .s-table {
             width: 100%;
             table-layout: auto;
         }
 
-        .a-table tr {
+        .s-table tr {
             page-break-inside: avoid;
         }
 
-        .a-table th {
+        .s-table th {
             background: #f2f0ea !important;
             -webkit-print-color-adjust: exact;
             print-color-adjust: exact;
