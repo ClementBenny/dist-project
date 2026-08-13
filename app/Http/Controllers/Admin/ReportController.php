@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Order;
 use App\Models\User;
+use App\Models\Feedback;
 use Illuminate\Http\Request;
 
 class ReportController extends Controller
@@ -87,6 +88,18 @@ class ReportController extends Controller
         return view('admin.reports.users', compact('rows', 'sort', 'direction'));
     }
 
+    public function feedback(Request $request)
+    {
+        [$sort, $direction] = $this->resolveSort($request, ['rating', 'created_at'], 'created_at', 'desc');
+
+        $rows = Feedback::with('user')
+            ->when($request->filled('rating'), fn($q) => $q->where('rating', $request->rating))
+            ->when($request->filled('status'), fn($q) => $q->where('is_active', $request->status === 'active'))
+            ->orderBy($sort, $direction)
+            ->get();
+
+        return view('admin.reports.feedback', compact('rows', 'sort', 'direction'));
+    }
 
     private function resolveSort(Request $request, array $allowed, string $default, string $defaultDirection): array
     {
@@ -110,5 +123,20 @@ class ReportController extends Controller
             ->values();
 
         return $years->isEmpty() ? collect([now()->year]) : $years;
+    }
+    public function feedbackShow(Feedback $feedback)
+    {
+        $feedback->load('user');
+
+        return view('admin.reports.feedback-show', compact('feedback'));
+    }
+
+    public function feedbackToggle(Feedback $feedback)
+    {
+        $feedback->update(['is_active' => !$feedback->is_active]);
+
+        return redirect()
+            ->route('admin.reports.feedback.show', $feedback)
+            ->with('success', $feedback->is_active ? 'Feedback is now active on the site.' : 'Feedback is now hidden from the site.');
     }
 }

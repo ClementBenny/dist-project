@@ -62,6 +62,9 @@ Route::middleware(['auth', 'role:admin', 'no.back'])->prefix('admin')->name('adm
         Route::get('/products', 'products')->name('products');
         Route::get('/orders', 'orders')->name('orders');
         Route::get('/users', 'users')->name('users');
+        Route::get('/feedback', 'feedback')->name('feedback');
+        Route::get('/feedback/{feedback}', 'feedbackShow')->name('feedback.show');
+        Route::patch('/feedback/{feedback}/toggle', 'feedbackToggle')->name('feedback.toggle');
     });
     Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
     Route::resource('products', \App\Http\Controllers\Admin\ProductController::class);

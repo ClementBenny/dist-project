@@ -254,6 +254,9 @@
             <a href="{{ route('admin.reports.users') }}" class="{{ request()->routeIs('admin.reports.users') ? 'active' : '' }}">
                 <i class="ti ti-users"></i> Users
             </a>
+            <a href="{{ route('admin.reports.feedback') }}" class="{{ request()->routeIs('admin.reports.feedback') ? 'active' : '' }}">
+                <i class="ti ti-message-star"></i> Feedback
+            </a>
         </nav>
 
         <div class="sidebar-footer">

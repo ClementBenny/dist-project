@@ -144,7 +144,7 @@
 </section>
 
 {{-- FEEDBACK STRIP --}}
-@php $landingFeedbacks = \App\Models\Feedback::with('user')->latest()->take(3)->get(); @endphp
+@php $landingFeedbacks = \App\Models\Feedback::with('user')->where('is_active', true)->latest()->take(3)->get(); @endphp
 @if($landingFeedbacks->isNotEmpty())
 <section style="padding:100px 48px; background:var(--mauve);">
     <div style="max-width:900px; margin:0 auto;">
