@@ -186,5 +186,12 @@
     @yield('content')
 </div>
 
+<script>
+    window.addEventListener('pageshow', function (e) {
+        if (e.persisted) window.location.reload();
+    });
+    window.addEventListener('unload', function () {});
+</script>
+
 </body>
 </html>

@@ -17,6 +17,12 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): View
     {
+        if (auth()->check()) {
+            auth()->guard('web')->logout();
+            request()->session()->invalidate();
+            request()->session()->regenerateToken();
+        }
+
         return view('auth.login');
     }
 
@@ -38,6 +44,7 @@ class AuthenticatedSessionController extends Controller
         }
 
         $request->session()->regenerate();
+        $request->session()->forget('url.intended');
 
         $destination = match(auth()->user()->role) {
             'shop'     => route('wholesale.index'),
@@ -45,8 +52,9 @@ class AuthenticatedSessionController extends Controller
             default    => route('shop.index'),
         };
 
-        return redirect()->intended($destination);
+        return redirect($destination);
     }
+
     /**
      * Destroy an authenticated session.
      */

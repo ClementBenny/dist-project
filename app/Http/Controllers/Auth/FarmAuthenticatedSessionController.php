@@ -16,6 +16,12 @@ class FarmAuthenticatedSessionController extends Controller
      */
     public function create(): View
     {
+        if (auth()->check()) {
+            auth()->guard('web')->logout();
+            request()->session()->invalidate();
+            request()->session()->regenerateToken();
+        }
+
         return view('auth.farm-login');
     }
 
@@ -39,12 +45,13 @@ class FarmAuthenticatedSessionController extends Controller
         }
 
         $request->session()->regenerate();
+        $request->session()->forget('url.intended');
 
         $destination = match (auth()->user()->role) {
             'admin' => route('admin.dashboard'),
             'staff' => route('staff.dashboard'),
         };
 
-        return redirect()->intended($destination);
+        return redirect($destination);
     }
 }

@@ -637,6 +637,13 @@
     <p class="footer-copy">© {{ date('Y') }} Farm Direct, Kerala</p>
 </footer>
 
+<script>
+    window.addEventListener('pageshow', function (e) {
+        if (e.persisted) window.location.reload();
+    });
+    window.addEventListener('unload', function () {});
+</script>
+
 @stack('scripts')
 
 </body>
