@@ -33,6 +33,9 @@
     @if(Route::has('password.request'))
         <a href="{{ route('password.request') }}" class="auth-link">Forgot your password?</a>
     @endif
+
+    <a href="{{ route('register') }}" class="auth-link">Don't have an account? Register</a>
+
 </form>
 
 @endsection
